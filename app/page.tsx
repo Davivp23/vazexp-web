@@ -1,11 +1,14 @@
-import Link from 'next/link'; // Importante: usar next/link
+"use client";
+import Link from 'next/link';
+import { useState, useEffect, useRef, use } from 'react';
 
-function Navbar() {
+function Navbar({ isVisible }) {
   return (
     <nav
       className={`
         fixed top-0 left-0 w-full bg-blanco-roto p-4 z-50
         transition-transform duration-300 ease-in-out
+        ${isVisible ? 'transform translate-y-0' : 'transform -translate-y-full'}
       `}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -45,9 +48,113 @@ function Hero() {
   );
 }
 
+function ListaProyectos() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const horizontalScrollRef = useRef<HTMLDivElement>(null);
+  const [isIntersecting, setIsIntersecting] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsIntersecting(entry.isIntersecting);
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 1.0,
+      }
+    );
+    
+    const currentSection = sectionRef.current;
+    if (currentSection) {
+      observer.observe(currentSection);
+    }
+
+    return () => {
+      if (currentSection) {
+        observer.unobserve(currentSection);
+      }
+    };
+  }, []);
+
+useEffect(() => {
+    const horizontalScroller = horizontalScrollRef.current;
+    
+    // Si no está visible O no existe el elemento, no hagas nada.
+    if (!isIntersecting || !horizontalScroller) {
+      return;
+    }
+
+    const onWheel = (e: WheelEvent) => {
+      // 'e.deltaY' es el scroll vertical. Si es 0, no hagas nada.
+      if (e.deltaY === 0) return;
+
+      // Asegúrate de que el elemento scroller todavía existe
+      const scroller = horizontalScrollRef.current;
+      if (!scroller) return;
+
+      // --- ESTA ES LA MAGIA ---
+      // Calcula si estás al principio o al final del scroll horizontal
+      // Damos un margen de 2px para problemas de redondeo de píxeles
+      const atEnd = scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 2;
+      const atStart = scroller.scrollLeft <= 0;
+
+      // Si el usuario scrollea "hacia abajo" (e.deltaY > 0)
+      if (e.deltaY > 0) {
+        // ...y NO estás al final del scroll horizontal...
+        if (!atEnd) {
+          e.preventDefault(); // ...entonces, ¡secuestra el scroll!
+          scroller.scrollLeft += e.deltaY; // Mueve el scroll horizontal
+        }
+        // Si ESTÁS al final, no se llama a preventDefault() y la página
+        // scrollea verticalmente de forma normal.
+      
+      // Si el usuario scrollea "hacia arriba" (e.deltaY < 0)
+      } else {
+        // ...y NO estás al principio...
+        if (!atStart) {
+          e.preventDefault(); // ...entonces, ¡secuestra el scroll!
+          scroller.scrollLeft += e.deltaY; // Mueve el scroll horizontal
+        }
+        // Si ESTÁS al principio, no se llama a preventDefault() y la página
+        // scrollea verticalmente de forma normal.
+      }
+    };
+
+    // Añade el detector A LA VENTANA
+    window.addEventListener('wheel', onWheel, { passive: false }); 
+
+    // Limpieza: Quita el detector cuando 'isIntersecting' sea false
+    return () => {
+      window.removeEventListener('wheel', onWheel); 
+    };
+  }, [isIntersecting]);
+
+  return (
+    <main className="bg-blanco-roto">
+      <section
+        ref={sectionRef}
+        className="text-gris-oscuro min-h-screen flex flex-col justify-center text-center">
+        <div
+          ref={horizontalScrollRef}
+          className="flex flex-row flex-nowrap overflow-x-auto"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            <ProyectoRojo />
+            <ProyectoVerde />
+            <ProyectoRojo />
+            <ProyectoVerde />
+            <ProyectoVerde />
+            <ProyectoRojo />
+            <ProyectoVerde />
+        </div>
+      </section>
+    </main>
+  );
+}
+
 function ProyectoVerde() {
   return (
-    <div className="max-w-7xl mx-auto px-4 bg-verde-grisaceo p-8 text-blanco-roto">
+    <div className="min-w-[50vw] h-screen px-4 bg-verde-grisaceo p-8 text-blanco-roto">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Descripción del proyecto */}
         <div className="flex flex-col justify-center">
@@ -68,7 +175,7 @@ function ProyectoVerde() {
 
 function ProyectoRojo() {
   return (
-    <div className="max-w-7xl mx-auto px-4 bg-terracota p-8 text-blanco-roto">
+    <div className="min-w-[50vw] h-screen px-4 bg-terracota p-8 text-blanco-roto">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Descripción del proyecto */}
         <div className="flex flex-col justify-center">
@@ -100,12 +207,35 @@ function Footer() {
 }
 
 export default function Home() {
+
+  const [showNav, setShowNav] = useState(false);
+  const heroWrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!heroWrapperRef.current) return;
+
+      const heroHeight = heroWrapperRef.current.offsetHeight;
+     if (window.scrollY > (heroHeight - 50)) {
+        setShowNav(true);
+      } else {
+        setShowNav(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
     <>
-      <Navbar />
-      <Hero />
-      <ProyectoVerde />
-      <ProyectoRojo />
+      <Navbar isVisible={showNav} />
+      <div ref={heroWrapperRef}>
+        <Hero />
+      </div>
+      <ListaProyectos />
       <Footer />
     </>
   );
