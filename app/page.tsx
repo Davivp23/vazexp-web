@@ -49,14 +49,6 @@ function ProyectoVerde() {
   return (
     <div className="max-w-7xl mx-auto px-4 bg-verde-grisaceo p-8 text-blanco-roto">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Imagen del proyecto */}
-        <div>
-          <img
-            src="/ruta-a-la-imagen-del-proyecto.jpg"
-            alt="Descripción del proyecto"
-            className="w-full h-auto"
-          />
-        </div>
         {/* Descripción del proyecto */}
         <div className="flex flex-col justify-center">
           <h2 className="text-2xl font-bold mb-4">Nombre del Proyecto</h2>
@@ -78,14 +70,6 @@ function ProyectoRojo() {
   return (
     <div className="max-w-7xl mx-auto px-4 bg-terracota p-8 text-blanco-roto">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Imagen del proyecto */}
-        <div>
-          <img
-            src="/ruta-a-la-imagen-del-proyecto.jpg"
-            alt="Descripción del proyecto"
-            className="w-full h-auto"
-          />
-        </div>
         {/* Descripción del proyecto */}
         <div className="flex flex-col justify-center">
           <h2 className="text-2xl font-bold mb-4">Nombre del Proyecto</h2>
