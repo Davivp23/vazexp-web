@@ -7,9 +7,9 @@ export default function ProyectoVerde() {
         {/* Descripción del proyecto */}
         <div className="flex flex-col justify-center">
           <h2 className="text-2xl font-bold mb-4">Nombre del Proyecto</h2>
-          <p className="mb-4">
+          <h3 className="mb-4">
             Breve descripción del proyecto, destacando los aspectos clave y el enfoque de diseño utilizado.
-          </p>
+          </h3>
           <ul className="list-disc list-inside">
             <li>Característica 1 del proyecto</li>
             <li>Característica 2 del proyecto</li>
