@@ -2,7 +2,7 @@
 
 export default function ProyectoVerde() {
   return (
-    <div className="min-w-[50vw] h-screen px-4 bg-blue-400 p-8 text-blanco-roto">
+    <div className="min-w-[50vw] h-screen px-4 bg-verde-grisaceo p-8 text-blanco-roto">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Descripción del proyecto */}
         <div className="flex flex-col justify-center">

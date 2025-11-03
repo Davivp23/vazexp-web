@@ -77,10 +77,10 @@ body {
 }
 
 @theme {
-  --blanco-roto: #F0EDE9;
-  --gris-oscuro: #2F2F2D;
-  --verde-grisaceo: #8E9580;
-  --terracota: #8D4822;
+  --color-blanco-roto: #F0EDE9;
+  --color-gris-oscuro: #2F2F2D;
+  --color-verde-grisaceo: #8E9580;
+  --color-terracota: #8D4822;
 }
 
 .scroll-section-outer{
