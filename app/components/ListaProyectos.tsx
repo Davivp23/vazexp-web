@@ -2,8 +2,7 @@ import React, { useRef, useEffect, use } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
-import ProyectoRojo from './ProyectoRojo';
-import ProyectoVerde from './ProyectoVerde';
+import TarjetaProyecto from './TarjetaProyecto';
 
 function ListaProyectos() {
 
@@ -16,12 +15,12 @@ function ListaProyectos() {
 
       const pin = gsap.fromTo(sectionRef.current, 
         { translateX: 0 }, 
-        { translateX: '-300vw',
+        { translateX: '-600vw',
           ease: 'none',
           scrollTrigger: {
             trigger: triggerRef.current,
             start: 'top top',
-            end: '2000 top',
+            end: '4000 top',
             scrub: 0.6,
             pin: true 
           }
@@ -37,12 +36,14 @@ function ListaProyectos() {
   return (
     <section className='scroll-section-outer'>
       <div ref={triggerRef}>
+        <h2 className='text-gris-oscuro text-5xl py-15 place-self-center'>Proyectos</h2>
         <div ref={sectionRef} className='scroll-section-inner'>
-          <ProyectoRojo />
-          <ProyectoVerde />
-          <ProyectoRojo />
-          <ProyectoVerde />
-          <ProyectoRojo />
+            <TarjetaProyecto />
+            <TarjetaProyecto />
+            <TarjetaProyecto />
+            <TarjetaProyecto />
+            <TarjetaProyecto />
+            <TarjetaProyecto />
         </div>
       </div>
     </section>
