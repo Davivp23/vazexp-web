@@ -31,10 +31,12 @@ export default function Home() {
   return (
     <>
       <Navbar isVisible={showNav} />
-      <div ref={heroWrapperRef}>
+      <div id="hero" ref={heroWrapperRef}>
         <Hero />
       </div>
-      <ListaProyectos />
+      <div id="proyectos">
+        <ListaProyectos />
+      </div>
       <Footer />
     </>
   );
