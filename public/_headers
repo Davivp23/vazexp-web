@@ -1,0 +1,12 @@
+# Cache extremo para tu secuencia de animación (1 año, inmutable)
+# Esto le dice a Cloudflare y al navegador: "Estas imágenes JAMÁS cambiarán"
+/anim/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Opcional: Cachear el resto de imágenes sueltas de la carpeta public
+/*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+/*.png
+  Cache-Control: public, max-age=31536000, immutable
+/*.webp
+  Cache-Control: public, max-age=31536000, immutable

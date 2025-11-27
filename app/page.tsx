@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ListaProyectos from './components/ListaProyectos';
 import Footer from './components/Footer';
+import ScrollSequence from './components/ScrollSequence';
 
 export default function Home() {
 
@@ -15,7 +16,7 @@ export default function Home() {
       if (!heroWrapperRef.current) return;
 
       const heroHeight = heroWrapperRef.current.offsetHeight;
-     if (window.scrollY > (heroHeight - 50)) {
+      if (window.scrollY > (heroHeight - 50)) {
         setShowNav(true);
       } else {
         setShowNav(false);
@@ -36,6 +37,11 @@ export default function Home() {
       </div>
       <div id="proyectos">
         <ListaProyectos />
+        <ScrollSequence
+          frameCount={48}        // ¿Cuántas fotos tienes?
+          folderPath="/anim/" // Carpeta dentro de public
+          fileExtension="png"     // Extensión
+        />
       </div>
       <Footer />
     </>
