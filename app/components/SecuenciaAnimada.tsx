@@ -1,27 +1,27 @@
-"use client"; // Obligatorio en Next.js App Router para hooks
+"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import TextoFade from "./TextoFade";
 
-// Registramos el plugin fuera del componente para evitar re-registros
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
 }
 
-interface ScrollSequenceProps {
+interface SecuenciaAnimadaProps {
     frameCount: number;     // Total de imágenes (ej: 300)
     folderPath: string;     // Ruta en public (ej: "/images/hero/")
     filePrefix?: string;    // Si tus archivos tienen prefijo (ej: "img-")
     fileExtension?: string; // (ej: "jpg", "webp")
 }
 
-export default function ScrollSequence({
+export default function SecuenciaAnimada({
     frameCount,
     folderPath,
     filePrefix = "",
     fileExtension = "png",
-}: ScrollSequenceProps) {
+}: SecuenciaAnimadaProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -37,18 +37,14 @@ export default function ScrollSequence({
         const images: HTMLImageElement[] = [];
         const imageState = { frame: 0 };
 
-        // Función corregida para archivos tipo "01.png", "02.png"...
         const getCurrentFrame = (index: number) =>
             `${folderPath}${filePrefix}${index.toString().padStart(2, "0")}.${fileExtension}`;
 
-        // --- FUNCIÓN DE RENDER SEGURA ---
         const render = () => {
             context.clearRect(0, 0, canvas.width, canvas.height);
 
             const img = images[imageState.frame];
 
-            // AQUÍ ESTÁ EL FIX:
-            // Si la imagen no existe, no se ha cargado, o está rota, NO hacemos nada.
             if (!img || !img.complete || img.naturalWidth === 0) {
                 return;
             }
@@ -56,7 +52,6 @@ export default function ScrollSequence({
             context.drawImage(img, 0, 0, canvas.width, canvas.height);
         };
 
-        // --- CARGA DE IMÁGENES ---
         let loadedCount = 0;
 
         for (let i = 1; i <= frameCount; i++) {
@@ -64,7 +59,6 @@ export default function ScrollSequence({
             const src = getCurrentFrame(i);
             img.src = src;
 
-            // Si carga bien:
             img.onload = () => {
                 loadedCount++;
                 if (loadedCount === frameCount) {
@@ -73,41 +67,43 @@ export default function ScrollSequence({
                 }
             };
 
-            // Si falla (esto te dirá en la consola si la ruta está mal):
             img.onerror = () => {
-                console.error(`❌ Error cargando imagen: ${src} - Verifica la ruta y extensión`);
+                console.error(`Error cargando imagen: ${src} - Verifica la ruta y extensión`);
             };
 
             images.push(img);
         }
 
-        // --- ANIMACIÓN GSAP ---
-        const tween = gsap.to(imageState, {
-            frame: frameCount - 1,
-            snap: "frame",
-            ease: "none",
+        const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: containerRef.current,
                 start: "top top",
                 end: "bottom bottom",
                 scrub: 0.5,
-            },
-            onUpdate: render,
+            }
         });
+
+        tl.to(imageState, {
+            frame: frameCount - 1,
+            snap: "frame",
+            ease: "none",
+            duration: 1,
+            onUpdate: render,
+        })
+            .to({}, { duration: 0.5 });
 
         const handleResize = () => render(); // Redibujar al cambiar tamaño
         window.addEventListener("resize", handleResize);
 
         return () => {
-            tween.kill();
+            tl.kill();
             ScrollTrigger.getAll().forEach((t) => t.kill());
             window.removeEventListener("resize", handleResize);
         };
     }, [frameCount, folderPath, filePrefix, fileExtension]);
 
     return (
-        // Altura controlada por Tailwind: h-[500vh] da mucho espacio de scroll
-        <div ref={containerRef} className="relative w-full h-[500vh] bg-black">
+        <div ref={containerRef} className="relative w-full h-[500vh] bg-gris-oscuro">
             <div className="sticky top-0 w-full h-screen flex items-center justify-center overflow-hidden">
 
                 {/* Loading state opcional */}
@@ -118,7 +114,37 @@ export default function ScrollSequence({
                 <canvas
                     ref={canvasRef}
                     className="w-full h-full object-cover"
-                // object-cover en CSS estira el canvas, aunque la resolución interna sea 1920x1080
+                />
+                <TextoFade
+                    triggerRef={containerRef}
+                    titulo="Pasillos."
+                    descripcion="Gigantescos y con alfombras rojas."
+                    alineacion="izq"
+                    inicio="0%"
+                    fin="15%"
+                    colorTexto="verde-grisaceo"
+                    inicioDesvanecer="50%"
+                    finDesvanecer="60%"
+                />
+                <TextoFade
+                    triggerRef={containerRef}
+                    titulo="Cara."
+                    descripcion="Una cara extraña al fondo de los pasillos."
+                    alineacion="der"
+                    inicio="25%"
+                    fin="40%"
+                    colorTexto="terracota"
+                    inicioDesvanecer="50%"
+                    finDesvanecer="60%"
+                />
+                <TextoFade triggerRef={containerRef}
+                    inicio="60%"
+                    fin="75%"
+                    alineacion="centro"
+                    titulo="Flores."
+                    descripcion=""
+                    finDesvanecer="85%"
+                    colorTexto="blanco-roto"
                 />
             </div>
         </div>

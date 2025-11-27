@@ -4,7 +4,7 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ListaProyectos from './components/ListaProyectos';
 import Footer from './components/Footer';
-import ScrollSequence from './components/ScrollSequence';
+import SecuenciaAnimada from './components/SecuenciaAnimada';
 
 export default function Home() {
 
@@ -37,12 +37,14 @@ export default function Home() {
       </div>
       <div id="proyectos">
         <ListaProyectos />
-        <ScrollSequence
-          frameCount={50}        // ¿Cuántas fotos tienes?
-          folderPath="/anim/" // Carpeta dentro de public
-          fileExtension="png"     // Extensión
+        <SecuenciaAnimada
+          frameCount={50}
+          folderPath="/anim/"
+          fileExtension="png"
         />
       </div>
+      <h1>Relleno para ver como queda</h1>
+      <h2 className="text-9xl">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.</h2>
       <Footer />
     </>
   );
