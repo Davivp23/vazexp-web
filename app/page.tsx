@@ -38,7 +38,7 @@ export default function Home() {
       <div id="proyectos">
         <ListaProyectos />
         <ScrollSequence
-          frameCount={48}        // ¿Cuántas fotos tienes?
+          frameCount={50}        // ¿Cuántas fotos tienes?
           folderPath="/anim/" // Carpeta dentro de public
           fileExtension="png"     // Extensión
         />
